@@ -1,0 +1,117 @@
+{
+    "apiVersion": "batch/v1",
+    "kind": "Job",
+    "metadata": {
+        "name": "",
+        "namespace": ""
+    },
+    "spec": {
+        "backoffLimit": 4,
+        "completions": 1,
+        "parallelism": 1,
+        "template": {
+            "spec": {
+                "volumes": [
+                    {
+                        "hostPath": {
+                            "path": "/usr/lib/nvidia-384/bin"
+                        },
+                        "name": "bin"
+                    },
+                    {
+                        "hostPath": {
+                            "path": "/usr/lib/nvidia-384"
+                        },
+                        "name": "lib"
+                    },
+                    {
+                        "hostPath": {
+                            "path": "/usr/lib/x86_64-linux-gnu/libcuda.so.1"
+                        },
+                        "name": "libcuda-so-1"
+                    },
+                    {
+                        "hostPath": {
+                            "path": "/usr/lib/x86_64-linux-gnu/libcuda.so"
+                        },
+                        "name": "libcuda-so"
+                    },
+                    {
+                        "hostPath": {
+                            "path": "/media/nas"
+                        },
+                        "name": "data"
+                    }
+                ],
+                "containers": [
+                    {
+                        "image": "",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "",
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "env": [
+                            {
+                                "name": "GITTOKEN",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "name": "",
+                                        "key": "gittoken"
+                                    }
+                                }
+                            }
+                        ],
+                        "command": [
+                            "/bin/bash"
+                        ],
+                        "args": [],
+                        "resources": {
+                            "requests": {
+                                "nvidia.com/gpu": 0
+                            },
+                            "limits": {
+                                "nvidia.com/gpu": 0
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/usr/local/nvidia/bin",
+                                "name": "bin"
+                            },
+                            {
+                                "mountPath": "/usr/local/nvidia/lib",
+                                "name": "lib"
+                            },
+                            {
+                                "mountPath": "/usr/lib/x86_64-linux-gnu/libcuda.so.1",
+                                "name": "libcuda-so-1"
+                            },
+                            {
+                                "mountPath": "/usr/lib/x86_64-linux-gnu/libcuda.so",
+                                "name": "libcuda-so"
+                            },
+                            {
+                                "mountPath": "/code",
+                                "name": "code"
+                            },
+                            {
+                                "mountPath": "/data",
+                                "name": "data"
+                            }
+                        ]
+                    }
+                ],               
+                "dnsPolicy": "ClusterFirst",
+                "imagePullSecrets": [
+                    {
+                        "name": "kubsecret"
+                    }
+                ],
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "terminationGracePeriodSeconds": 30
+            }
+        }
+    }
+}
